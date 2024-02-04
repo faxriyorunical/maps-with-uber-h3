@@ -66,7 +66,12 @@ const routingUtil = (waypoints: any, mapRef: any) => {
   console.log(`oof ${waypoints.length}`);
 };
 
-const geocodingUtil = (mapRef: any, latLng: any) => {
+const geocodingUtil = (
+  mapRef: any,
+  latLng: any,
+  reverseCodedWaypoints: any,
+  setReverseCodedWaypoints: any
+) => {
   // trying geocoding -- this works
   //@ts-ignore
   let geocoder = new L.Control.Geocoder.nominatim();
@@ -75,12 +80,26 @@ const geocodingUtil = (mapRef: any, latLng: any) => {
   let scalingAccuracy = mapRef?.options.crs.scale(20);
   console.log(scalingAccuracy, "scalingAccuracy");
 
+  let reverseCodedValue = "";
+
   geocoder.reverse(latLng, scalingAccuracy, function (results: any) {
     let address = "";
     if (results?.length > 0) {
       let reverseCoded = results[0];
       console.log(reverseCoded, "reverseCoded");
       address = reverseCoded.name;
+    }
+
+    
+    if (address != "") {
+      reverseCodedValue = address;
+      setReverseCodedWaypoints([...reverseCodedWaypoints, reverseCodedValue]);
+    }
+
+    if (address == "") {
+      // latlng address fallback - if returns empty string set lat lng template string
+      reverseCodedValue = `Lat: ${latLng.lat} , Lng: ${latLng.lng}`;
+      setReverseCodedWaypoints([...reverseCodedWaypoints, reverseCodedValue]);
     }
 
     if (address != "") {
@@ -104,6 +123,9 @@ const geocodingUtil = (mapRef: any, latLng: any) => {
 
 const RoutingMachineController = (props: any) => {
   const [waypoints, setWaypoints] = useState<L.LatLng[] | [] | any>([]);
+  const [reverseCodedWaypoints, setReverseCodedWaypoints] = useState<[] | any>(
+    []
+  );
   const [search, setSearch] = useState(false);
   const [showMenu, setShowMenu] = useState(true);
 
@@ -125,13 +147,22 @@ const RoutingMachineController = (props: any) => {
         showMenuHandler();
       }
 
-      geocodingUtil(mapRef, latLng);
+      geocodingUtil(
+        mapRef,
+        latLng,
+        reverseCodedWaypoints,
+        setReverseCodedWaypoints
+      );
     },
   });
 
   useEffect(() => {
-    console.log(waypoints);
+    console.log(waypoints, "useeffect waypoints");
   }, [waypoints]);
+
+  useEffect(() => {
+    console.log(reverseCodedWaypoints, "useeffect reverseCodedWaypoints");
+  }, [reverseCodedWaypoints]);
 
   return (
     <>
@@ -183,7 +214,8 @@ const RoutingMachineController = (props: any) => {
               key={`waypoints-${idx}`}
               className="p-2 align-middle text-start text-xs md:text-sm font-thin"
             >
-              {`${idx} Lat: ${waypoint.lat} , Lng: ${waypoint.lng}`}
+              {/* {`${idx} Lat: ${waypoint.lat} , Lng: ${waypoint.lng}`} */}
+              {`${reverseCodedWaypoints?.[idx]==undefined?"~Geocoding Please Wait~":reverseCodedWaypoints?.[idx]}`}
             </div>
           ))}
 
@@ -225,6 +257,7 @@ const RoutingMachineController = (props: any) => {
                     mapRef.removeControl(routeControl2);
 
                   setWaypoints([]);
+                  setReverseCodedWaypoints([]);
                   setSearch(false);
 
                   //   window?.location.reload();
@@ -253,8 +286,8 @@ const RoutingMachineController = (props: any) => {
               })
             }
           >
-            <Tooltip>{`Path ${idx}`}</Tooltip>
-            <Popup>{`Path ${idx}`}</Popup>
+            <Tooltip>{idx===0?`Starting Point ${idx}`:idx==waypoints?.length-1?`Final Point ${idx}`:`Point ${idx}`}</Tooltip>
+            <Popup>{`${reverseCodedWaypoints?.[idx]==undefined?"~Geocoding Please Wait~":reverseCodedWaypoints?.[idx]}`}</Popup>
           </Marker>
         ))}
     </>
