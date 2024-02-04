@@ -119,40 +119,12 @@ const RoutingMachineController = (props: any) => {
     },
     dblclick: (e) => {
       let latLng = e.latlng;
-      // let alliedForces = L.layerGroup().addTo(mapRef);
-      // console.log(alliedForces);
-      // alliedForces.clearLayers();
 
       setWaypoints([...waypoints, L.latLng(latLng.lat, latLng.lng)]);
 
       if (!showMenu) {
         showMenuHandler();
       }
-
-      // /**
-      //  * geocoding string address to coordinates
-      //  */
-      // // trying geocoding -- this works
-      // //@ts-ignore
-      // let geocoder = new L.Control.Geocoder.nominatim();
-      // let address = "singapore";
-      // geocoder.geocode(address, function (results) {
-      //   console.log(results)
-      //   let latLngoof = new L.LatLng(
-      //     results[0].center.lat,
-      //     results[0].center.lng
-      //   );
-      //   console.log(results);
-      //   console.log(latLngoof, "latLngoof");
-      // });
-      // // let scalingAccuracy = mapRef.options.crs.scale(mapRef.getZoom())
-      // let scalingAccuracy = mapRef?.options.crs.scale(20)
-      // console.log(scalingAccuracy,"scalingAccuracy")
-
-      // geocoder.reverse(latLng,scalingAccuracy, function (results) {
-      //   let reverseCoded = results[0];
-      //   console.log(reverseCoded, "reverseCoded");
-      // });
 
       geocodingUtil(mapRef, latLng);
     },
