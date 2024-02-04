@@ -74,7 +74,6 @@ const geocodingUtil = (mapRef: any, latLng: any) => {
   // let scalingAccuracy = mapRef.options.crs.scale(mapRef.getZoom())
   let scalingAccuracy = mapRef?.options.crs.scale(20);
   console.log(scalingAccuracy, "scalingAccuracy");
-  // let address = "";
 
   geocoder.reverse(latLng, scalingAccuracy, function (results: any) {
     let address = "";
