@@ -287,16 +287,7 @@ const RoutingMachineController = (props: any) => {
 
     geocodingUtil(latLng);
 
-    // const h3Index: string = h3indexUtil(11, latLng, setH3IndexList);
-
-    // const hexCenterCoordinates = hexCenterCoordinatesUtil(
-    //   h3Index,
-    //   setHexCenterCoordinatesList
-    // );
-
-    // hexBoundaryUtil(h3Index, setHexBoundaryList);
-
-    h3ComboUtil (latLng)
+    h3ComboUtil(latLng);
   };
 
   /**
