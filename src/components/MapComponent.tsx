@@ -121,6 +121,16 @@ const RoutingMachineController = (props: any) => {
     setReverseCodedWaypoints([]);
   };
 
+  /**
+   *
+   * @param e
+   *
+   * uses latlng from event object and adds it to waypoints state
+   *
+   * if menu state is false -> sets the menu visibility to true
+   *
+   * triggers the geocoding util for reverse geocoding latng to stringed address
+   */
   const doubleClickEventUtil = (e: L.LeafletMouseEvent | any) => {
     let latLng: L.LatLng = e.latlng;
 
@@ -132,6 +142,7 @@ const RoutingMachineController = (props: any) => {
 
     geocodingUtil(latLng);
   };
+
   /**
    * holds the mapevents
    *
