@@ -21,6 +21,7 @@ import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { leafletConfig, markerPath } from "@/utils/leafletConfig";
+import { routingUtilExported } from "@/utils/routingUtil";
 
 // const markerPath = "/marker-icon.png";
 
@@ -51,20 +52,20 @@ const RoutingMachine = (props: any) => {
   return null;
 };
 
-const routingUtil = (waypoints: any, mapRef: any) => {
-  routeControl2 = L.Routing.control({
-    waypoints: waypoints,
-    // routeWhileDragging: true,
-    // showAlternatives: false,
-    addWaypoints: false,
+// const routingUtil = (waypoints: any, mapRef: any) => {
+//   routeControl2 = L.Routing.control({
+//     waypoints: waypoints,
+//     // routeWhileDragging: true,
+//     // showAlternatives: false,
+//     addWaypoints: false,
 
-    //@ts-ignore
-    draggableWaypoints: false,
-    //@ts-ignore
-    geocoder: L.Control.Geocoder.nominatim(),
-  }).addTo(mapRef);
-  console.log(`oof ${waypoints.length}`);
-};
+//     //@ts-ignore
+//     draggableWaypoints: false,
+//     //@ts-ignore
+//     geocoder: L.Control.Geocoder.nominatim(),
+//   }).addTo(mapRef);
+//   console.log(`oof ${waypoints.length}`);
+// };
 
 const geocodingUtil = (
   mapRef: any,
@@ -90,7 +91,6 @@ const geocodingUtil = (
       address = reverseCoded.name;
     }
 
-    
     if (address != "") {
       reverseCodedValue = address;
       setReverseCodedWaypoints([...reverseCodedWaypoints, reverseCodedValue]);
@@ -215,7 +215,11 @@ const RoutingMachineController = (props: any) => {
               className="p-2 align-middle text-start text-xs md:text-sm font-thin"
             >
               {/* {`${idx} Lat: ${waypoint.lat} , Lng: ${waypoint.lng}`} */}
-              {`${reverseCodedWaypoints?.[idx]==undefined?"~Geocoding Please Wait~":reverseCodedWaypoints?.[idx]}`}
+              {`${
+                reverseCodedWaypoints?.[idx] == undefined
+                  ? "~Geocoding Please Wait~"
+                  : reverseCodedWaypoints?.[idx]
+              }`}
             </div>
           ))}
 
@@ -226,14 +230,17 @@ const RoutingMachineController = (props: any) => {
                 onClick={async () => {
                   if (routeControl !== null) {
                     mapRef.removeControl(routeControl);
-                    routingUtil(waypoints, mapRef); // produces undesireable results / different from norm
+                    // routingUtil(waypoints, mapRef); // produces undesireable results / different from norm
+                    routingUtilExported(L, routeControl2, waypoints, mapRef);
                   }
 
                   if (routeControl2 !== null) {
                     mapRef.removeControl(routeControl2);
                     // routingUtil(waypoints, mapRef); // produces undesireable results / different from norm
                   }
-                  routingUtil(waypoints, mapRef);
+
+                  // routingUtil(waypoints, mapRef);
+                  routingUtilExported(L, routeControl2, waypoints, mapRef);
                   setSearch(true);
                   showMenuHandler();
                   renderCount = 0;
@@ -286,8 +293,18 @@ const RoutingMachineController = (props: any) => {
               })
             }
           >
-            <Tooltip>{idx===0?`Starting Point ${idx}`:idx==waypoints?.length-1?`Final Point ${idx}`:`Point ${idx}`}</Tooltip>
-            <Popup>{`${reverseCodedWaypoints?.[idx]==undefined?"~Geocoding Please Wait~":reverseCodedWaypoints?.[idx]}`}</Popup>
+            <Tooltip>
+              {idx === 0
+                ? `Starting Point ${idx}`
+                : idx == waypoints?.length - 1
+                ? `Final Point ${idx}`
+                : `Point ${idx}`}
+            </Tooltip>
+            <Popup>{`${
+              reverseCodedWaypoints?.[idx] == undefined
+                ? "~Geocoding Please Wait~"
+                : reverseCodedWaypoints?.[idx]
+            }`}</Popup>
           </Marker>
         ))}
     </>
