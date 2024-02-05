@@ -1,3 +1,6 @@
+/**
+ * leaflet configs 
+ */
 export const leafletConfig = {
   zoom: 4,
   minZoom: 3,

@@ -28,27 +28,74 @@ import { geocodingUtilExported } from "@/utils/geocodingUtil";
 
 /**
  * routeControl2 with current setup is working
+ *
+ * run operations on this variable to remove waypoints markers, routing points
+ *
  */
 let routeControl2: L.Routing.Control | null = null;
 
+/**
+ *
+ * @param props
+ * @returns jsx
+ *
+ * Routing machine
+ *
+ * holds waypoints & reverseCodedWaypoints states -- currently --might alter later
+ *
+ * has menu component - trigger routing , clear markers
+ *
+ * controls map events - double click to place markers ,reverse geocode and then use it routing path
+ *
+ */
 const RoutingMachineController = (props: any) => {
+  /**
+   * waypoints on double click stored here
+   *
+   * later used for reverse geocoidng and routing machine
+   */
   const [waypoints, setWaypoints] = useState<L.LatLng[] | [] | any[]>([]);
+
+  /**
+   * reverse geocoded strings are stored here
+   */
   const [reverseCodedWaypoints, setReverseCodedWaypoints] = useState<
     [] | any[] | string[]
   >([]);
   const [search, setSearch] = useState<boolean>(false);
+
+  /**
+   * routing menu visiblity state
+   */
   const [showMenu, setShowMenu] = useState<boolean>(true);
 
+  /**
+   * menu visibility handler
+   */
   const showMenuHandler = () => {
     setShowMenu((prev) => !prev);
   };
 
+  /**
+   * leaflet mapref used for various operations
+   */
   const mapRef: L.Map = useMap();
 
+  /**
+   * routing util to trigger routing machine path geneartions
+   */
   const routingUtil = () => {
     routeControl2 = routingUtilExported(L, waypoints, mapRef);
   };
 
+  /**
+   *
+   * @param latLng
+   *
+   * triggers geocodingUtilExported
+   *
+   * tries to reverse geocode from latlng and then stores the string value to state
+   */
   const geocodingUtil = (latLng: any) => {
     geocodingUtilExported(
       L,
@@ -59,15 +106,26 @@ const RoutingMachineController = (props: any) => {
     );
   };
 
+  /**
+   * clear markers , paths from the map 
+   */
   const clearUtil = () => {
     mapRef.removeControl(routeControl2 as L.Routing.Control);
   };
 
+  /**
+   * reset the waypoint states 
+   */
   const resetWaypointStates = () => {
     setWaypoints([]);
     setReverseCodedWaypoints([]);
   };
 
+  /**
+   * holds the mapevents
+   * 
+   * double click map event is configured here
+   */
   const map: L.Map = useMapEvents({
     click: (e) => {
       console.log(e);

@@ -1,3 +1,15 @@
+/**
+ * 
+ * @param L 
+ * @param mapRef 
+ * @param latLng 
+ * @param reverseCodedWaypoints 
+ * @param setReverseCodedWaypoints 
+ * 
+ * geocoding util takes in latlngs and generates stringed address - reverse geocoding
+ * 
+ * stringed addresses are stored to reverseCodedWaypoints state
+ */
 export const geocodingUtilExported = (
   L: any,
   mapRef: any,
