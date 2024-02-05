@@ -137,10 +137,15 @@ const RoutingMachineController = (props: any) => {
 
   /**
    * reset the waypoint states
+   * 
+   * empty out - waypoints , reversecodedwaypoints , indexlist , hexcenters , hexboundarylist
    */
   const resetWaypointStates = () => {
     setWaypoints([]);
     setReverseCodedWaypoints([]);
+    setH3IndexList([]);
+    setHexCenterCoordinatesList([]);
+    setHexBoundaryList([])
   };
 
   /**
@@ -160,6 +165,77 @@ const RoutingMachineController = (props: any) => {
 
   /**
    *
+   * @param res
+   * @param latLng
+   * @returns h3index string
+   *
+   * util to generate h3index from latlng
+   *
+   * Convert a lat/lng point to a hexagon index at resolution 10
+   *
+   * 0 (continental) to res 15 (1 square meter). Res 9 is roughly a city block
+   *
+   * setting default to 11
+   */
+  const h3indexUtil: (res: number | undefined, latLng: L.LatLng) => string = (
+    res = 11,
+    latLng: L.LatLng
+  ) => {
+    // Convert a lat/lng point to a hexagon index at resolution 10
+    // 0 (continental) to res 15 (1 square meter). Res 9 is roughly a city block
+    const h3Index: string = h3.latLngToCell(latLng.lat, latLng.lng, 11);
+
+    console.log(h3Index, "h3Index");
+
+    return h3Index;
+  };
+
+  /**
+   *
+   * @param h3Index
+   * @returns [latlng] | h3.CoordPair
+   *
+   * Get the center of the hexagon
+   */
+  const hexCenterCoordinatesUtil: (h3Index: string) => h3.CoordPair = (
+    h3Index: string
+  ) => {
+    // Get the center of the hexagon
+    const hexCenterCoordinates: h3.CoordPair = h3.cellToLatLng(h3Index);
+
+    console.log(hexCenterCoordinates, "hexCenterCoordinates");
+
+    return hexCenterCoordinates;
+  };
+
+  /**
+   *
+   * @param h3Index
+   * @param hexBoundaryList
+   * @param setHexBoundaryList
+   *
+   * generate hex boundaries [[lat,lng]]
+   *
+   * store to hexBoundaryList
+   *
+   *
+   */
+  const hexBoundaryUtil = (
+    h3Index: string,
+    hexBoundaryList: any[] | [] | [L.LatLng[]],
+    setHexBoundaryList: (
+      value: React.SetStateAction<any[] | [] | [L.LatLng[]]>
+    ) => void
+  ) => {
+    // Get the vertices of the hexagon
+    const hexBoundary: h3.CoordPair[] = h3.cellToBoundary(h3Index);
+    console.log(hexBoundary, "hexBoundary");
+
+    setHexBoundaryList([...hexBoundaryList, hexBoundary]);
+  };
+
+  /**
+   *
    * @param e
    *
    * uses latlng from event object and adds it to waypoints state
@@ -173,28 +249,34 @@ const RoutingMachineController = (props: any) => {
 
     setWaypoints([...waypoints, L.latLng(latLng.lat, latLng.lng)]);
 
-    // Convert a lat/lng point to a hexagon index at resolution 10
-    // 0 (continental) to res 15 (1 square meter). Res 9 is roughly a city block
-    const h3Index = h3.latLngToCell(latLng.lat, latLng.lng, 11);
-
-    console.log(h3Index, "h3Index");
-
-    // Get the center of the hexagon
-    const hexCenterCoordinates = h3.cellToLatLng(h3Index);
-
-    console.log(hexCenterCoordinates, "hexCenterCoordinates");
-
-    // Get the vertices of the hexagon
-    const hexBoundary = h3.cellToBoundary(h3Index);
-    console.log(hexBoundary, "hexBoundary");
-
-    setHexBoundaryList([...hexBoundaryList, hexBoundary]);
-
     if (!showMenu) {
       showMenuHandler();
     }
 
     geocodingUtil(latLng);
+
+    // // Convert a lat/lng point to a hexagon index at resolution 10
+    // // 0 (continental) to res 15 (1 square meter). Res 9 is roughly a city block
+    // const h3Index = h3.latLngToCell(latLng.lat, latLng.lng, 11);
+
+    // console.log(h3Index, "h3Index");
+
+    const h3Index: string = h3indexUtil(11, latLng);
+
+    // // Get the center of the hexagon
+    // const hexCenterCoordinates = h3.cellToLatLng(h3Index);
+
+    // console.log(hexCenterCoordinates, "hexCenterCoordinates");
+
+    const hexCenterCoordinates = hexCenterCoordinatesUtil(h3Index);
+
+    // // Get the vertices of the hexagon
+    // const hexBoundary = h3.cellToBoundary(h3Index);
+    // console.log(hexBoundary, "hexBoundary");
+
+    // setHexBoundaryList([...hexBoundaryList, hexBoundary]);
+
+    hexBoundaryUtil(h3Index, hexBoundaryList, setHexBoundaryList);
   };
 
   /**
