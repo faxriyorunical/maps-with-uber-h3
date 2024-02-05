@@ -128,6 +128,11 @@ const RoutingMachineController = (props: any) => {
     mapRef.removeControl(routeControl2);
   };
 
+  const resetWaypointStates =()=>{
+    setWaypoints([]);
+    setReverseCodedWaypoints([]);
+  }
+
   const map = useMapEvents({
     click: (e) => {
       console.log(e);
@@ -256,15 +261,13 @@ const RoutingMachineController = (props: any) => {
                 onClick={() => {
                   if (routeControl !== null) mapRef.removeControl(routeControl);
 
-                  if (routeControl2 !== null)
-                    // mapRef.removeControl(routeControl2);
-                    clearUtil();
+                  if (routeControl2 !== null) clearUtil();
 
-                  setWaypoints([]);
-                  setReverseCodedWaypoints([]);
+                  // setWaypoints([]);
+                  // setReverseCodedWaypoints([]);
+                  
+                  resetWaypointStates()
                   setSearch(false);
-
-                  //   window?.location.reload();
                 }}
               >
                 <p className="font-thin text-base md:text-xl text-white">
@@ -292,9 +295,9 @@ const RoutingMachineController = (props: any) => {
           >
             <Tooltip>
               {idx === 0
-                ? `Starting Point ${idx}`
+                ? `Starting Point`
                 : idx == waypoints?.length - 1
-                ? `Final Point ${idx}`
+                ? `Final Point`
                 : `Point ${idx}`}
             </Tooltip>
             <Popup>{`${
