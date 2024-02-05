@@ -365,11 +365,23 @@ const RoutingMachineController = (props: any) => {
                 ? `Final Point`
                 : `Point ${idx}`}
             </Tooltip>
-            <Popup>{`${
-              reverseCodedWaypoints?.[idx] == undefined
-                ? "~Geocoding Please Wait~"
-                : reverseCodedWaypoints?.[idx]
-            }`}</Popup>
+            <Popup>
+              {`${
+                reverseCodedWaypoints?.[idx] == undefined
+                  ? "~Geocoding Please Wait~"
+                  : reverseCodedWaypoints?.[idx]
+              }`}
+              <br />
+              <hr />
+              {`Marker latlng:`}
+              <br/>
+              {`Lat:${latLng?.lat} , Lng:${latLng?.lng}`}
+              <br />
+              <hr />
+              {`H3 index: ${h3IndexList?.[idx]}`}
+              <br />
+              {`H3 center latlng: ${hexCenterCoordinatesList?.[idx]}`}
+            </Popup>
           </Marker>
         ))}
 
