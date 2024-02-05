@@ -119,6 +119,15 @@ const RoutingMachineController = (props: any) => {
   };
 
   const mapRef = useMap();
+
+  const routingUtil = () => {
+    routeControl2 = routingUtilExported(L, waypoints, mapRef);
+  };
+
+  const clearUtil = () => {
+    mapRef.removeControl(routeControl2);
+  };
+
   const map = useMapEvents({
     click: (e) => {
       console.log(e);
@@ -215,14 +224,18 @@ const RoutingMachineController = (props: any) => {
                 onClick={async () => {
                   if (routeControl !== null) {
                     mapRef.removeControl(routeControl);
-                    routeControl2 = routingUtilExported(L, waypoints, mapRef);
+
+                    // routeControl2 = routingUtilExported(L, waypoints, mapRef);
+                    routingUtil();
                   }
 
                   if (routeControl2 !== null) {
-                    mapRef.removeControl(routeControl2);
+                    // mapRef.removeControl(routeControl2);
+                    clearUtil();
                   }
 
-                  routeControl2 = routingUtilExported(L, waypoints, mapRef);
+                  // routeControl2 = routingUtilExported(L, waypoints, mapRef);
+                  routingUtil();
 
                   setSearch(true);
                   showMenuHandler();
@@ -244,7 +257,8 @@ const RoutingMachineController = (props: any) => {
                   if (routeControl !== null) mapRef.removeControl(routeControl);
 
                   if (routeControl2 !== null)
-                    mapRef.removeControl(routeControl2);
+                    // mapRef.removeControl(routeControl2);
+                    clearUtil();
 
                   setWaypoints([]);
                   setReverseCodedWaypoints([]);
