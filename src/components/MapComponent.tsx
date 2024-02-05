@@ -107,23 +107,34 @@ const RoutingMachineController = (props: any) => {
   };
 
   /**
-   * clear markers , paths from the map 
+   * clear markers , paths from the map
    */
   const clearUtil = () => {
     mapRef.removeControl(routeControl2 as L.Routing.Control);
   };
 
   /**
-   * reset the waypoint states 
+   * reset the waypoint states
    */
   const resetWaypointStates = () => {
     setWaypoints([]);
     setReverseCodedWaypoints([]);
   };
 
+  const doubleClickEventUtil = (e: L.LeafletMouseEvent | any) => {
+    let latLng: L.LatLng = e.latlng;
+
+    setWaypoints([...waypoints, L.latLng(latLng.lat, latLng.lng)]);
+
+    if (!showMenu) {
+      showMenuHandler();
+    }
+
+    geocodingUtil(latLng);
+  };
   /**
    * holds the mapevents
-   * 
+   *
    * double click map event is configured here
    */
   const map: L.Map = useMapEvents({
@@ -131,15 +142,17 @@ const RoutingMachineController = (props: any) => {
       console.log(e);
     },
     dblclick: (e) => {
-      let latLng = e.latlng;
+      // let latLng: L.LatLng = e.latlng;
 
-      setWaypoints([...waypoints, L.latLng(latLng.lat, latLng.lng)]);
+      // setWaypoints([...waypoints, L.latLng(latLng.lat, latLng.lng)]);
 
-      if (!showMenu) {
-        showMenuHandler();
-      }
+      // if (!showMenu) {
+      //   showMenuHandler();
+      // }
 
-      geocodingUtil(latLng);
+      // geocodingUtil(latLng);
+
+      doubleClickEventUtil(e);
     },
   });
 
