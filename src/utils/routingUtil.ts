@@ -1,6 +1,8 @@
 
-export const routingUtilExported = (L:any,waypoints: any, mapRef: any) => {
-    let routeControl = L.Routing.control({
+import L from "leaflet";
+
+export const routingUtilExported = (L:any ,waypoints: any[], mapRef:L.Map) => {
+    let routeControl: L.Routing.Control = L.Routing.control({
       waypoints: waypoints,
       // routeWhileDragging: true,
       // showAlternatives: false,

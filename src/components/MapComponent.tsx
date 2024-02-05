@@ -29,22 +29,21 @@ import { geocodingUtilExported } from "@/utils/geocodingUtil";
 /**
  * routeControl2 with current setup is working
  */
-let routeControl2: any = null;
-
+let routeControl2: L.Routing.Control | null = null;
 
 const RoutingMachineController = (props: any) => {
-  const [waypoints, setWaypoints] = useState<L.LatLng[] | [] | any>([]);
-  const [reverseCodedWaypoints, setReverseCodedWaypoints] = useState<[] | any>(
-    []
-  );
-  const [search, setSearch] = useState(false);
-  const [showMenu, setShowMenu] = useState(true);
+  const [waypoints, setWaypoints] = useState<L.LatLng[] | [] | any[]>([]);
+  const [reverseCodedWaypoints, setReverseCodedWaypoints] = useState<
+    [] | any[] | string[]
+  >([]);
+  const [search, setSearch] = useState<boolean>(false);
+  const [showMenu, setShowMenu] = useState<boolean>(true);
 
   const showMenuHandler = () => {
     setShowMenu((prev) => !prev);
   };
 
-  const mapRef = useMap();
+  const mapRef: L.Map = useMap();
 
   const routingUtil = () => {
     routeControl2 = routingUtilExported(L, waypoints, mapRef);
@@ -61,7 +60,7 @@ const RoutingMachineController = (props: any) => {
   };
 
   const clearUtil = () => {
-    mapRef.removeControl(routeControl2);
+    mapRef.removeControl(routeControl2 as L.Routing.Control);
   };
 
   const resetWaypointStates = () => {
@@ -69,7 +68,7 @@ const RoutingMachineController = (props: any) => {
     setReverseCodedWaypoints([]);
   };
 
-  const map = useMapEvents({
+  const map: L.Map = useMapEvents({
     click: (e) => {
       console.log(e);
     },

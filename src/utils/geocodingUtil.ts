@@ -2,7 +2,7 @@ export const geocodingUtilExported = (
   L: any,
   mapRef: any,
   latLng: any,
-  reverseCodedWaypoints: any,
+  reverseCodedWaypoints: any[],
   setReverseCodedWaypoints: any
 ) => {
   // trying geocoding -- this works
