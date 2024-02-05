@@ -22,6 +22,7 @@ import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { leafletConfig, markerPath } from "@/utils/leafletConfig";
 import { routingUtilExported } from "@/utils/routingUtil";
+import { geocodingUtilExported } from "@/utils/geocodingUtil";
 
 // const markerPath = "/marker-icon.png";
 
@@ -30,59 +31,59 @@ import { routingUtilExported } from "@/utils/routingUtil";
  */
 let routeControl2: any = null;
 
-const geocodingUtil = (
-  mapRef: any,
-  latLng: any,
-  reverseCodedWaypoints: any,
-  setReverseCodedWaypoints: any
-) => {
-  // trying geocoding -- this works
-  //@ts-ignore
-  let geocoder = new L.Control.Geocoder.nominatim();
+// const geocodingUtil = (
+//   mapRef: any,
+//   latLng: any,
+//   reverseCodedWaypoints: any,
+//   setReverseCodedWaypoints: any
+// ) => {
+//   // trying geocoding -- this works
+//   //@ts-ignore
+//   let geocoder = new L.Control.Geocoder.nominatim();
 
-  // let scalingAccuracy = mapRef.options.crs.scale(mapRef.getZoom())
-  let scalingAccuracy = mapRef?.options.crs.scale(20);
-  console.log(scalingAccuracy, "scalingAccuracy");
+//   // let scalingAccuracy = mapRef.options.crs.scale(mapRef.getZoom())
+//   let scalingAccuracy = mapRef?.options.crs.scale(20);
+//   console.log(scalingAccuracy, "scalingAccuracy");
 
-  let reverseCodedValue = "";
+//   let reverseCodedValue = "";
 
-  geocoder.reverse(latLng, scalingAccuracy, function (results: any) {
-    let address = "";
-    if (results?.length > 0) {
-      let reverseCoded = results[0];
-      console.log(reverseCoded, "reverseCoded");
-      address = reverseCoded.name;
-    }
+//   geocoder.reverse(latLng, scalingAccuracy, function (results: any) {
+//     let address = "";
+//     if (results?.length > 0) {
+//       let reverseCoded = results[0];
+//       console.log(reverseCoded, "reverseCoded");
+//       address = reverseCoded.name;
+//     }
 
-    if (address != "") {
-      reverseCodedValue = address;
-      setReverseCodedWaypoints([...reverseCodedWaypoints, reverseCodedValue]);
-    }
+//     if (address != "") {
+//       reverseCodedValue = address;
+//       setReverseCodedWaypoints([...reverseCodedWaypoints, reverseCodedValue]);
+//     }
 
-    if (address == "") {
-      // latlng address fallback - if returns empty string set lat lng template string
-      reverseCodedValue = `Lat: ${latLng.lat} , Lng: ${latLng.lng}`;
-      setReverseCodedWaypoints([...reverseCodedWaypoints, reverseCodedValue]);
-    }
+//     if (address == "") {
+//       // latlng address fallback - if returns empty string set lat lng template string
+//       reverseCodedValue = `Lat: ${latLng.lat} , Lng: ${latLng.lng}`;
+//       setReverseCodedWaypoints([...reverseCodedWaypoints, reverseCodedValue]);
+//     }
 
-    if (address != "") {
-      /**
-       * geocoding string address to coordinates
-       */
-      geocoder.geocode(address, function (results: any) {
-        console.log(results);
-        if (results?.length > 0) {
-          let latLngoof = new L.LatLng(
-            results[0].center.lat,
-            results[0].center.lng
-          );
-          console.log(results);
-          console.log(latLngoof, "latLngoof");
-        }
-      });
-    }
-  });
-};
+//     if (address != "") {
+//       /**
+//        * geocoding string address to coordinates
+//        */
+//       geocoder.geocode(address, function (results: any) {
+//         console.log(results);
+//         if (results?.length > 0) {
+//           let latLngoof = new L.LatLng(
+//             results[0].center.lat,
+//             results[0].center.lng
+//           );
+//           console.log(results);
+//           console.log(latLngoof, "latLngoof");
+//         }
+//       });
+//     }
+//   });
+// };
 
 const RoutingMachineController = (props: any) => {
   const [waypoints, setWaypoints] = useState<L.LatLng[] | [] | any>([]);
@@ -100,6 +101,16 @@ const RoutingMachineController = (props: any) => {
 
   const routingUtil = () => {
     routeControl2 = routingUtilExported(L, waypoints, mapRef);
+  };
+
+  const geocodingUtil = (latLng: any) => {
+    geocodingUtilExported(
+      L,
+      mapRef,
+      latLng,
+      reverseCodedWaypoints,
+      setReverseCodedWaypoints
+    );
   };
 
   const clearUtil = () => {
@@ -124,12 +135,14 @@ const RoutingMachineController = (props: any) => {
         showMenuHandler();
       }
 
-      geocodingUtil(
-        mapRef,
-        latLng,
-        reverseCodedWaypoints,
-        setReverseCodedWaypoints
-      );
+      // geocodingUtil(
+      //   mapRef,
+      //   latLng,
+      //   reverseCodedWaypoints,
+      //   setReverseCodedWaypoints
+      // );
+
+      geocodingUtil(latLng);
     },
   });
 
