@@ -52,21 +52,6 @@ const RoutingMachine = (props: any) => {
   return null;
 };
 
-// const routingUtil = (waypoints: any, mapRef: any) => {
-//   routeControl2 = L.Routing.control({
-//     waypoints: waypoints,
-//     // routeWhileDragging: true,
-//     // showAlternatives: false,
-//     addWaypoints: false,
-
-//     //@ts-ignore
-//     draggableWaypoints: false,
-//     //@ts-ignore
-//     geocoder: L.Control.Geocoder.nominatim(),
-//   }).addTo(mapRef);
-//   console.log(`oof ${waypoints.length}`);
-// };
-
 const geocodingUtil = (
   mapRef: any,
   latLng: any,
@@ -230,17 +215,12 @@ const RoutingMachineController = (props: any) => {
                 onClick={async () => {
                   if (routeControl !== null) {
                     mapRef.removeControl(routeControl);
-                    // routingUtil(waypoints, mapRef); // produces undesireable results / different from norm
-
                     routeControl2 = routingUtilExported(L, waypoints, mapRef);
                   }
 
                   if (routeControl2 !== null) {
                     mapRef.removeControl(routeControl2);
-                    // routingUtil(waypoints, mapRef); // produces undesireable results / different from norm
                   }
-
-                  // routingUtil(waypoints, mapRef);
 
                   routeControl2 = routingUtilExported(L, waypoints, mapRef);
 
