@@ -128,10 +128,10 @@ const RoutingMachineController = (props: any) => {
     mapRef.removeControl(routeControl2);
   };
 
-  const resetWaypointStates =()=>{
+  const resetWaypointStates = () => {
     setWaypoints([]);
     setReverseCodedWaypoints([]);
-  }
+  };
 
   const map = useMapEvents({
     click: (e) => {
@@ -263,10 +263,7 @@ const RoutingMachineController = (props: any) => {
 
                   if (routeControl2 !== null) clearUtil();
 
-                  // setWaypoints([]);
-                  // setReverseCodedWaypoints([]);
-                  
-                  resetWaypointStates()
+                  resetWaypointStates();
                   setSearch(false);
                 }}
               >
