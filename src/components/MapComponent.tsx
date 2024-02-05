@@ -146,7 +146,7 @@ const RoutingMachineController = (props: any) => {
               {/* {`${idx} Lat: ${waypoint.lat} , Lng: ${waypoint.lng}`} */}
               {`${
                 reverseCodedWaypoints?.[idx] == undefined
-                  ? "~Geocoding Please Wait~"
+                  ? `~Geocoding Please Wait~ Lat:${waypoint.lat} , Lng:${waypoint.lng}`
                   : reverseCodedWaypoints?.[idx]
               }`}
             </div>
