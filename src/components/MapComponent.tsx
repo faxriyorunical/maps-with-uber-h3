@@ -25,32 +25,10 @@ import { routingUtilExported } from "@/utils/routingUtil";
 
 // const markerPath = "/marker-icon.png";
 
-let renderCount = 0;
-let routeControl: any = null;
-
 /**
  * routeControl2 with current setup is working
  */
 let routeControl2: any = null;
-let reRoute = false;
-
-const RoutingMachine = (props: any) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (renderCount === 0) {
-      routeControl = L.Routing.control({
-        waypoints: props.waypoints,
-        // routeWhileDragging: true,
-        // showAlternatives: false,
-        addWaypoints: false,
-      }).addTo(map);
-      console.log(`oof ${props?.waypoints.length}`);
-      renderCount++;
-    }
-  }, []);
-  return null;
-};
 
 const geocodingUtil = (
   mapRef: any,
@@ -227,24 +205,14 @@ const RoutingMachineController = (props: any) => {
               <button
                 className="bg-emerald-500 pt-2 pb-2 pr-4 pl-4 mt-2 mb-4 w-52"
                 onClick={async () => {
-                  if (routeControl !== null) {
-                    mapRef.removeControl(routeControl);
-
-                    // routeControl2 = routingUtilExported(L, waypoints, mapRef);
-                    routingUtil();
-                  }
-
                   if (routeControl2 !== null) {
-                    // mapRef.removeControl(routeControl2);
                     clearUtil();
                   }
 
-                  // routeControl2 = routingUtilExported(L, waypoints, mapRef);
                   routingUtil();
 
                   setSearch(true);
                   showMenuHandler();
-                  renderCount = 0;
                 }}
               >
                 <p className="font-thin text-base md:text-xl text-white">
@@ -259,8 +227,6 @@ const RoutingMachineController = (props: any) => {
               <button
                 className="bg-red-300 pt-2 pb-2 pr-4 pl-4 mb-4 w-52"
                 onClick={() => {
-                  if (routeControl !== null) mapRef.removeControl(routeControl);
-
                   if (routeControl2 !== null) clearUtil();
 
                   resetWaypointStates();
