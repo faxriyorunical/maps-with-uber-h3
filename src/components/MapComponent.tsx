@@ -181,7 +181,7 @@ const RoutingMachineController = (props: any) => {
    * generate hex boundary [[lat,lng]] using h3index string and store to state.
    */
   const h3ComboUtil = (latLng: L.LatLng) => {
-    const h3Index: string = h3indexUtil(11, latLng, setH3IndexList);
+    const h3Index: string = h3indexUtil(latLng, setH3IndexList, 11);
 
     const hexCenterCoordinates: h3.CoordPair = hexCenterCoordinatesUtil(
       h3Index,
@@ -374,7 +374,7 @@ const RoutingMachineController = (props: any) => {
               <br />
               <hr />
               {`Marker latlng:`}
-              <br/>
+              <br />
               {`Lat:${latLng?.lat} , Lng:${latLng?.lng}`}
               <br />
               <hr />

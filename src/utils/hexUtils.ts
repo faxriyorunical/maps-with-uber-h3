@@ -15,13 +15,15 @@ import * as h3 from "h3-js";
  * setting default to 11
  */
 export const h3indexUtil = (
-  res = 11,
   latLng: L.LatLng,
-  setH3IndexList: (value: React.SetStateAction<any[] | [] | [string[]]>) => void
+  setH3IndexList: (
+    value: React.SetStateAction<any[] | [] | [string[]]>
+  ) => void,
+  res = 11
 ) => {
   // Convert a lat/lng point to a hexagon index at resolution 10
   // 0 (continental) to res 15 (1 square meter). Res 9 is roughly a city block
-  const h3Index: string = h3.latLngToCell(latLng.lat, latLng.lng, 11);
+  const h3Index: string = h3.latLngToCell(latLng.lat, latLng.lng, res);
 
   console.log(h3Index, "h3Index");
 
