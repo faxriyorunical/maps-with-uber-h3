@@ -231,7 +231,8 @@ const RoutingMachineController = (props: any) => {
                   if (routeControl !== null) {
                     mapRef.removeControl(routeControl);
                     // routingUtil(waypoints, mapRef); // produces undesireable results / different from norm
-                    routingUtilExported(L, routeControl2, waypoints, mapRef);
+
+                    routeControl2 = routingUtilExported(L, waypoints, mapRef);
                   }
 
                   if (routeControl2 !== null) {
@@ -240,7 +241,9 @@ const RoutingMachineController = (props: any) => {
                   }
 
                   // routingUtil(waypoints, mapRef);
-                  routingUtilExported(L, routeControl2, waypoints, mapRef);
+
+                  routeControl2 = routingUtilExported(L, waypoints, mapRef);
+
                   setSearch(true);
                   showMenuHandler();
                   renderCount = 0;

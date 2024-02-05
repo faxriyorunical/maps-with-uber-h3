@@ -1,6 +1,6 @@
 
-export const routingUtilExported = (L:any,routeControl2:any,waypoints: any, mapRef: any) => {
-    routeControl2 = L.Routing.control({
+export const routingUtilExported = (L:any,waypoints: any, mapRef: any) => {
+    let routeControl = L.Routing.control({
       waypoints: waypoints,
       // routeWhileDragging: true,
       // showAlternatives: false,
@@ -12,4 +12,6 @@ export const routingUtilExported = (L:any,routeControl2:any,waypoints: any, mapR
       geocoder: L.Control.Geocoder.nominatim(),
     }).addTo(mapRef);
     console.log(`oof ${waypoints.length}`);
+
+    return routeControl 
   };
