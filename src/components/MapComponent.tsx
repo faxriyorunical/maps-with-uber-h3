@@ -255,26 +255,10 @@ const RoutingMachineController = (props: any) => {
 
     geocodingUtil(latLng);
 
-    // // Convert a lat/lng point to a hexagon index at resolution 10
-    // // 0 (continental) to res 15 (1 square meter). Res 9 is roughly a city block
-    // const h3Index = h3.latLngToCell(latLng.lat, latLng.lng, 11);
-
-    // console.log(h3Index, "h3Index");
 
     const h3Index: string = h3indexUtil(11, latLng);
 
-    // // Get the center of the hexagon
-    // const hexCenterCoordinates = h3.cellToLatLng(h3Index);
-
-    // console.log(hexCenterCoordinates, "hexCenterCoordinates");
-
     const hexCenterCoordinates = hexCenterCoordinatesUtil(h3Index);
-
-    // // Get the vertices of the hexagon
-    // const hexBoundary = h3.cellToBoundary(h3Index);
-    // console.log(hexBoundary, "hexBoundary");
-
-    // setHexBoundaryList([...hexBoundaryList, hexBoundary]);
 
     hexBoundaryUtil(h3Index, hexBoundaryList, setHexBoundaryList);
   };
