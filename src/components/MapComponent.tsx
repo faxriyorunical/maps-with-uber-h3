@@ -142,16 +142,6 @@ const RoutingMachineController = (props: any) => {
       console.log(e);
     },
     dblclick: (e) => {
-      // let latLng: L.LatLng = e.latlng;
-
-      // setWaypoints([...waypoints, L.latLng(latLng.lat, latLng.lng)]);
-
-      // if (!showMenu) {
-      //   showMenuHandler();
-      // }
-
-      // geocodingUtil(latLng);
-
       doubleClickEventUtil(e);
     },
   });
