@@ -121,6 +121,13 @@ const RoutingMachineController = (props: any) => {
     setReverseCodedWaypoints([]);
   };
 
+  const clearButtonHandler = () => {
+    if (routeControl2 !== null) clearUtil();
+
+    resetWaypointStates();
+    setSearch(false);
+  };
+
   /**
    *
    * @param e
@@ -250,12 +257,15 @@ const RoutingMachineController = (props: any) => {
             <div className="text-center">
               <button
                 className="bg-red-300 pt-2 pb-2 pr-4 pl-4 mb-4 w-52"
-                onClick={() => {
-                  if (routeControl2 !== null) clearUtil();
+                onClick={
+                  //   () => {
+                  //   if (routeControl2 !== null) clearUtil();
 
-                  resetWaypointStates();
-                  setSearch(false);
-                }}
+                  //   resetWaypointStates();
+                  //   setSearch(false);
+                  // }
+                  clearButtonHandler
+                }
               >
                 <p className="font-thin text-base md:text-xl text-white">
                   Clear
