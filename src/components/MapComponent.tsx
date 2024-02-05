@@ -25,7 +25,11 @@ import { leafletConfig, markerPath } from "@/utils/leafletConfig";
 import { routingUtilExported } from "@/utils/routingUtil";
 import { geocodingUtilExported } from "@/utils/geocodingUtil";
 import * as h3 from "h3-js";
-import { h3indexUtil, hexBoundaryUtil, hexCenterCoordinatesUtil } from "@/utils/hexUtils";
+import {
+  h3indexUtil,
+  hexBoundaryUtil,
+  hexCenterCoordinatesUtil,
+} from "@/utils/hexUtils";
 // const markerPath = "/marker-icon.png";
 
 /**
@@ -163,7 +167,6 @@ const RoutingMachineController = (props: any) => {
 
     resetWaypointStates();
   };
-
 
   /**
    *

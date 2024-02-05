@@ -1,5 +1,5 @@
 /**
- * leaflet configs 
+ * leaflet configs
  */
 export const leafletConfig = {
   zoom: 4,
