@@ -62,7 +62,6 @@ const RoutingMachineController = (props: any) => {
   const [reverseCodedWaypoints, setReverseCodedWaypoints] = useState<
     [] | any[] | string[]
   >([]);
-  const [search, setSearch] = useState<boolean>(false);
 
   /**
    * routing menu visiblity state
@@ -123,18 +122,17 @@ const RoutingMachineController = (props: any) => {
 
   /**
    * clearbuttonhandler
-   * 
-   * triggered using clear button from menu 
-   * 
+   *
+   * triggered using clear button from menu
+   *
    * on trigger- checks if routeControl2 is not null -> then clears the map using clearutil
-   * 
-   * always resets the waypoints and reverseCodedWaypoints 
+   *
+   * always resets the waypoints and reverseCodedWaypoints
    */
   const clearButtonHandler = () => {
     if (routeControl2 !== null) clearUtil();
 
     resetWaypointStates();
-    setSearch(false);
   };
 
   /**
@@ -251,7 +249,6 @@ const RoutingMachineController = (props: any) => {
 
                   routingUtil();
 
-                  setSearch(true);
                   showMenuHandler();
                 }}
               >
