@@ -137,7 +137,7 @@ const RoutingMachineController = (props: any) => {
 
   /**
    * reset the waypoint states
-   * 
+   *
    * empty out - waypoints , reversecodedwaypoints , indexlist , hexcenters , hexboundarylist
    */
   const resetWaypointStates = () => {
@@ -145,7 +145,7 @@ const RoutingMachineController = (props: any) => {
     setReverseCodedWaypoints([]);
     setH3IndexList([]);
     setHexCenterCoordinatesList([]);
-    setHexBoundaryList([])
+    setHexBoundaryList([]);
   };
 
   /**
@@ -177,15 +177,20 @@ const RoutingMachineController = (props: any) => {
    *
    * setting default to 11
    */
-  const h3indexUtil: (res: number | undefined, latLng: L.LatLng) => string = (
+  const h3indexUtil = (
     res = 11,
-    latLng: L.LatLng
+    latLng: L.LatLng,
+    setH3IndexList: (
+      value: React.SetStateAction<any[] | [] | [string[]]>
+    ) => void
   ) => {
     // Convert a lat/lng point to a hexagon index at resolution 10
     // 0 (continental) to res 15 (1 square meter). Res 9 is roughly a city block
     const h3Index: string = h3.latLngToCell(latLng.lat, latLng.lng, 11);
 
     console.log(h3Index, "h3Index");
+
+    setH3IndexList((prev) => [...prev, h3Index]);
 
     return h3Index;
   };
@@ -197,13 +202,18 @@ const RoutingMachineController = (props: any) => {
    *
    * Get the center of the hexagon
    */
-  const hexCenterCoordinatesUtil: (h3Index: string) => h3.CoordPair = (
-    h3Index: string
+  const hexCenterCoordinatesUtil = (
+    h3Index: string,
+    setHexCenterCoordinatesList: (
+      value: React.SetStateAction<any[] | [] | [L.LatLng[]]>
+    ) => void
   ) => {
     // Get the center of the hexagon
     const hexCenterCoordinates: h3.CoordPair = h3.cellToLatLng(h3Index);
 
     console.log(hexCenterCoordinates, "hexCenterCoordinates");
+
+    setHexCenterCoordinatesList((prev) => [...prev, hexCenterCoordinates]);
 
     return hexCenterCoordinates;
   };
@@ -222,7 +232,6 @@ const RoutingMachineController = (props: any) => {
    */
   const hexBoundaryUtil = (
     h3Index: string,
-    hexBoundaryList: any[] | [] | [L.LatLng[]],
     setHexBoundaryList: (
       value: React.SetStateAction<any[] | [] | [L.LatLng[]]>
     ) => void
@@ -231,7 +240,30 @@ const RoutingMachineController = (props: any) => {
     const hexBoundary: h3.CoordPair[] = h3.cellToBoundary(h3Index);
     console.log(hexBoundary, "hexBoundary");
 
-    setHexBoundaryList([...hexBoundaryList, hexBoundary]);
+    setHexBoundaryList((prev) => [...prev, hexBoundary]);
+  };
+
+  /**
+   *
+   * @param latLng
+   *
+   * h3combo util
+   *
+   * generate h3index from latlng and store to state
+   *
+   * generate hex center coordiantes and store to state
+   *
+   * generate hex boundary [[lat,lng]] using h3index string and store to state.
+   */
+  const h3ComboUtil = (latLng: L.LatLng) => {
+    const h3Index: string = h3indexUtil(11, latLng, setH3IndexList);
+
+    const hexCenterCoordinates: h3.CoordPair = hexCenterCoordinatesUtil(
+      h3Index,
+      setHexCenterCoordinatesList
+    );
+
+    hexBoundaryUtil(h3Index, setHexBoundaryList);
   };
 
   /**
@@ -255,12 +287,16 @@ const RoutingMachineController = (props: any) => {
 
     geocodingUtil(latLng);
 
+    // const h3Index: string = h3indexUtil(11, latLng, setH3IndexList);
 
-    const h3Index: string = h3indexUtil(11, latLng);
+    // const hexCenterCoordinates = hexCenterCoordinatesUtil(
+    //   h3Index,
+    //   setHexCenterCoordinatesList
+    // );
 
-    const hexCenterCoordinates = hexCenterCoordinatesUtil(h3Index);
+    // hexBoundaryUtil(h3Index, setHexBoundaryList);
 
-    hexBoundaryUtil(h3Index, hexBoundaryList, setHexBoundaryList);
+    h3ComboUtil (latLng)
   };
 
   /**
@@ -288,6 +324,14 @@ const RoutingMachineController = (props: any) => {
   useEffect(() => {
     console.log(hexBoundaryList, "useeffect hexBoundaryList");
   }, [hexBoundaryList]);
+
+  useEffect(() => {
+    console.log(hexCenterCoordinatesList, "useeffect hexCenterCoordinatesList");
+  }, [hexCenterCoordinatesList]);
+
+  useEffect(() => {
+    console.log(h3IndexList, "useeffect h3IndexList");
+  }, [h3IndexList]);
 
   return (
     <>
