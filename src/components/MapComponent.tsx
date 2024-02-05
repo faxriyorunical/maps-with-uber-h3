@@ -11,6 +11,7 @@ import {
   LayersControl,
   useMap,
   useMapEvents,
+  Polygon,
 } from "react-leaflet";
 import L, { ControlPosition, LatLngExpression } from "leaflet";
 import "leaflet-routing-machine";
@@ -23,7 +24,7 @@ import "leaflet/dist/leaflet.css";
 import { leafletConfig, markerPath } from "@/utils/leafletConfig";
 import { routingUtilExported } from "@/utils/routingUtil";
 import { geocodingUtilExported } from "@/utils/geocodingUtil";
-
+import * as h3 from "h3-js";
 // const markerPath = "/marker-icon.png";
 
 /**
@@ -67,6 +68,28 @@ const RoutingMachineController = (props: any) => {
    * routing menu visiblity state
    */
   const [showMenu, setShowMenu] = useState<boolean>(true);
+
+  /**
+   * h3index gets stored here
+   */
+  const [h3IndexList, setH3IndexList] = useState<[] | any[] | string[]>([]);
+
+  /**
+   * hexCenterCoordinates gets stored here
+   * list of [lat,lng]
+   */
+  const [hexCenterCoordinatesList, setHexCenterCoordinatesList] = useState<
+    [] | any[] | L.LatLng[]
+  >([]);
+
+  /**
+   * hexBoundary gets stored here
+   * list of latlng boundary data
+   *  [[lat,lng]]
+   */
+  const [hexBoundaryList, setHexBoundaryList] = useState<
+    [] | any[] | [L.LatLng[]]
+  >([]);
 
   /**
    * menu visibility handler
@@ -150,6 +173,23 @@ const RoutingMachineController = (props: any) => {
 
     setWaypoints([...waypoints, L.latLng(latLng.lat, latLng.lng)]);
 
+    // Convert a lat/lng point to a hexagon index at resolution 10
+    // 0 (continental) to res 15 (1 square meter). Res 9 is roughly a city block
+    const h3Index = h3.latLngToCell(latLng.lat, latLng.lng, 11);
+
+    console.log(h3Index, "h3Index");
+
+    // Get the center of the hexagon
+    const hexCenterCoordinates = h3.cellToLatLng(h3Index);
+
+    console.log(hexCenterCoordinates, "hexCenterCoordinates");
+
+    // Get the vertices of the hexagon
+    const hexBoundary = h3.cellToBoundary(h3Index);
+    console.log(hexBoundary, "hexBoundary");
+
+    setHexBoundaryList([...hexBoundaryList, hexBoundary]);
+
     if (!showMenu) {
       showMenuHandler();
     }
@@ -178,6 +218,10 @@ const RoutingMachineController = (props: any) => {
   useEffect(() => {
     console.log(reverseCodedWaypoints, "useeffect reverseCodedWaypoints");
   }, [reverseCodedWaypoints]);
+
+  useEffect(() => {
+    console.log(hexBoundaryList, "useeffect hexBoundaryList");
+  }, [hexBoundaryList]);
 
   return (
     <>
@@ -301,6 +345,20 @@ const RoutingMachineController = (props: any) => {
                 : reverseCodedWaypoints?.[idx]
             }`}</Popup>
           </Marker>
+        ))}
+
+      {hexBoundaryList?.length > 0 &&
+        hexBoundaryList?.map((singileHexCoordinates, idx) => (
+          <Polygon
+            key={`hex-${idx}`}
+            pathOptions={{ color: "red" }}
+            positions={
+              singileHexCoordinates as
+                | L.LatLngExpression[]
+                | L.LatLngExpression[][]
+                | L.LatLngExpression[][][]
+            }
+          />
         ))}
     </>
   );
