@@ -355,7 +355,7 @@ const RoutingMachineController = (props: any) => {
               })
             }
           >
-            <Tooltip>
+            <Tooltip permanent={true}>
               {idx === 0
                 ? `Starting Point`
                 : idx == waypoints?.length - 1
