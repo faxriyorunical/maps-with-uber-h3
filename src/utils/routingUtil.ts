@@ -22,6 +22,13 @@ export const routingUtilExported = (
 
     //@ts-ignore
     draggableWaypoints: false,
+
+    //show collapsable button on all view ports
+    collapsible: true,
+
+    //return falsey value to disable placing markers
+    createMarker: function (p1: any, p2: any) {},
+
     //@ts-ignore
     geocoder: L.Control.Geocoder.nominatim(),
   }).addTo(mapRef);

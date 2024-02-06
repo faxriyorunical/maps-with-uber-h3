@@ -339,7 +339,9 @@ const RoutingMachineController = (props: any) => {
         </div>
       )}
 
-      {showMenu &&
+      {
+        // showMenu &&
+
         waypoints.map((latLng: any, idx: any) => (
           <Marker
             key={`maker-${idx}`}
@@ -378,7 +380,8 @@ const RoutingMachineController = (props: any) => {
               {`H3 center latlng: ${hexCenterCoordinatesList?.[idx]}`}
             </Popup>
           </Marker>
-        ))}
+        ))
+      }
 
       {hexBoundaryList?.length > 0 &&
         hexBoundaryList?.map((singileHexCoordinates, idx) => (
