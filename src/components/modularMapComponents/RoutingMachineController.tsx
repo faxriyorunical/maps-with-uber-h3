@@ -107,7 +107,20 @@ const RoutingMachineController = (props: any) => {
    * routing util to trigger routing machine path geneartions
    */
   const routingUtil = () => {
-    routeControl2 = routingUtilExported(L, waypoints, mapRef);
+    routeControl2 = routingUtilExported( waypoints, mapRef);
+
+    console.log(routeControl2.getWaypoints(),"getWaypoints")
+    console.log(routeControl2.getContainer(),"getPlgetContaineran")
+    console.log(routeControl2.getRouter(),"getRouter")
+    console.log(routeControl2.getPlan(),"getPgetPlanlan")
+    console.log(routeControl2.getPosition(),"getPosition")
+    console.log(routeControl2,"routeControl2")
+    console.log(Object.keys(routeControl2),"routeControl2")
+    // console.log(routeControl2._container,"_container")
+    // console.log(routeControl2._plan,"_plan")
+    // console.log(routeControl2._itineraryBuilder,"_itineraryBuilder")
+    console.log(routeControl2.route,"instructions")
+    console.log(mapRef,"mapRef")
   };
 
   /**
@@ -218,6 +231,7 @@ const RoutingMachineController = (props: any) => {
   const map: L.Map = useMapEvents({
     click: (e) => {
       console.log(e);
+      console.log(e.layerPoint);
     },
     dblclick: (e) => {
       doubleClickEventUtil(e);

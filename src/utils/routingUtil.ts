@@ -1,5 +1,7 @@
 import L from "leaflet";
 
+import Line from "leaflet-routing-machine/src/line";
+
 /**
  *
  * @param L
@@ -9,11 +11,7 @@ import L from "leaflet";
  *
  * routing util which uses routing to generates paths
  */
-export const routingUtilExported = (
-  L: any,
-  waypoints: any[],
-  mapRef: L.Map
-) => {
+export const routingUtilExported = (waypoints: any[], mapRef: L.Map) => {
   let routeControl: L.Routing.Control = L.Routing.control({
     waypoints: waypoints,
     // routeWhileDragging: true,
@@ -28,6 +26,17 @@ export const routingUtilExported = (
 
     //return falsey value to disable placing markers
     createMarker: function (p1: any, p2: any) {},
+    routeLine(route, options) {
+      /**
+       * ['name', 'coordinates', 'instructions', 'summary', 'waypointIndices', 'inputWaypoints', 'waypoints', 'properties', 'routesIndex']
+       */
+      console.log(route, "route");
+      console.log(options, "options");
+      console.log(Object.keys(route), "route keys");
+      Object.keys(route).map((key) => console.log(route[key], key));
+
+      return new Line(route, options);
+    },
 
     //@ts-ignore
     geocoder: L.Control.Geocoder.nominatim(),
