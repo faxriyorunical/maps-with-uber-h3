@@ -113,6 +113,21 @@ const RoutingMachineController = (props: any) => {
   const [showPolygon2Hex, setShowPolygon2Hex] = useState<boolean>(true);
 
   /**
+   * service mode options for state
+   */
+  const serviceModeOptions = {
+    active: "active",
+    notActive: "notActive",
+    notSet: "notSet",
+  };
+  /**
+   * polygon2hex visibility
+   */
+  const [serviceMode, setServiceMode] = useState<string>(
+    serviceModeOptions.notSet
+  );
+
+  /**
    * menu visibility handler
    */
   const showMenuHandler = () => {
@@ -292,7 +307,7 @@ const RoutingMachineController = (props: any) => {
 
   const getHexagonsWithinPolygon = (
     polygonBoundaries: L.LatLng[],
-    res = 9
+    res = 10
   ) => {
     let polygon: number[][] | number[][][] =
       latlngObj2latLngList(polygonBoundaries);
@@ -375,6 +390,16 @@ const RoutingMachineController = (props: any) => {
 
   useEffect(() => {
     console.log(waypoints, "useeffect waypoints");
+
+    if (polygonBoundaryList.length === 0 && waypoints.length > 0) {
+      //setting service mode state
+      setServiceMode(serviceModeOptions.notActive);
+    }
+    if (polygonBoundaryList.length === 0 && waypoints.length === 0) {
+      //setting service mode state
+      setServiceMode(serviceModeOptions.notSet);
+    }
+
     // function oof() {
     //   var allLayers = L.featureGroup();
     //   mapRef.eachLayer(function (layer) {
@@ -424,7 +449,17 @@ const RoutingMachineController = (props: any) => {
     console.log(polygonBoundaryList, "useeffect polygonBoundaryList");
 
     if (polygonBoundaryList.length > 0) {
+      //get hexagons within polygon
       getHexagonsWithinPolygon(polygonBoundaryList[0]);
+
+      //setting service mode state
+      setServiceMode(serviceModeOptions.active);
+    }
+
+    if (polygonBoundaryList.length === 0 && waypoints.length === 0) {
+      //setting service mode state
+
+      setServiceMode(serviceModeOptions.notSet);
     }
   }, [polygonBoundaryList]);
 
@@ -470,6 +505,33 @@ const RoutingMachineController = (props: any) => {
               : "Click Route Button"}
             <hr />
           </div>
+          {serviceMode === serviceModeOptions.notSet && (
+            <div>
+              <div className={`font-thin text-sm md:text-base p-2`}>
+                Activate service area bound routing by placing a Rect/ Polygon.
+              </div>
+
+              <div className={`font-thin text-sm md:text-base pl-2 pr-2 pb-4`}>
+                Or directly place markers to route without service area bounds.
+              </div>
+            </div>
+          )}
+
+          {serviceMode === serviceModeOptions.active && (
+            <div>
+              <div className={`font-bold text-sm md:text-base p-2`}>
+                Service Area Routing Active
+              </div>
+            </div>
+          )}
+
+          {serviceMode === serviceModeOptions.notActive && (
+            <div>
+              <div className={`font-bold text-sm md:text-base p-2`}>
+                Normal Routing (No Constrains)
+              </div>
+            </div>
+          )}
 
           {waypoints.length >= 1 && (
             <div className={`font-thin text-sm md:text-base`}>
