@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@geoman-io/leaflet-geoman-free": "^2.15.0",
     "h3-js": "^4.1.0",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^2.4.0",

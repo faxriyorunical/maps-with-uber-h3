@@ -25,6 +25,8 @@ import {
   hexBoundaryUtil,
   hexCenterCoordinatesUtil,
 } from "@/utils/hexUtils";
+import "@geoman-io/leaflet-geoman-free";
+import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 // const markerPath = "/marker-icon.png";
 
 /**
@@ -107,20 +109,20 @@ const RoutingMachineController = (props: any) => {
    * routing util to trigger routing machine path geneartions
    */
   const routingUtil = () => {
-    routeControl2 = routingUtilExported( waypoints, mapRef);
+    routeControl2 = routingUtilExported(waypoints, mapRef);
 
-    console.log(routeControl2.getWaypoints(),"getWaypoints")
-    console.log(routeControl2.getContainer(),"getPlgetContaineran")
-    console.log(routeControl2.getRouter(),"getRouter")
-    console.log(routeControl2.getPlan(),"getPgetPlanlan")
-    console.log(routeControl2.getPosition(),"getPosition")
-    console.log(routeControl2,"routeControl2")
-    console.log(Object.keys(routeControl2),"routeControl2")
+    console.log(routeControl2.getWaypoints(), "getWaypoints");
+    console.log(routeControl2.getContainer(), "getPlgetContaineran");
+    console.log(routeControl2.getRouter(), "getRouter");
+    console.log(routeControl2.getPlan(), "getPgetPlanlan");
+    console.log(routeControl2.getPosition(), "getPosition");
+    console.log(routeControl2, "routeControl2");
+    console.log(Object.keys(routeControl2), "routeControl2");
     // console.log(routeControl2._container,"_container")
     // console.log(routeControl2._plan,"_plan")
     // console.log(routeControl2._itineraryBuilder,"_itineraryBuilder")
-    console.log(routeControl2.route,"instructions")
-    console.log(mapRef,"mapRef")
+    console.log(routeControl2.route, "instructions");
+    console.log(mapRef, "mapRef");
   };
 
   /**
@@ -228,7 +230,7 @@ const RoutingMachineController = (props: any) => {
    *
    * double click map event is configured here
    */
-  const map: L.Map = useMapEvents({
+  const mapEvents: L.Map = useMapEvents({
     click: (e) => {
       console.log(e);
       console.log(e.layerPoint);
@@ -238,25 +240,86 @@ const RoutingMachineController = (props: any) => {
     },
   });
 
+  // add Leaflet-Geoman controls with some options to the map
+  mapRef.pm.addControls({
+    position: "bottomleft",
+    drawCircleMarker: false,
+    rotateMode: false,
+    // drawMarker: waypoints.length > 0 ? false : true,
+    drawMarker: false,
+    drawPolyline: false,
+    drawCircle: false,
+    cutPolygon: false,
+    drawText: false,
+  });
+
+  //Called when a shape is drawn/finished. Payload includes shape type and the drawn layer.
+  mapRef.on("pm:create", (e) => {
+    let layer = e.layer;
+    console.log(layer, "pm:create -- created layer");
+
+    //Fired when Edit Mode is disabled and a layer is edited and its coordinates have changed.
+    layer.on("pm:update", function (e) {
+      console.log(layer, "pm:update -- updated layer");
+    });
+
+    // //Fired when Drag Mode on a layer is disabled.
+    // layer.on("pm:dragdisable", function (e) {
+    //   console.log(layer, "pm:dragdisable -- dragdisable layer");
+    // });
+
+    //Fired when Drag Mode on a layer is disabled.
+    layer.on("pm:remove", function (e) {
+      console.log(layer, "pm:remove -- remove layer");
+    });
+  });
+
   useEffect(() => {
     console.log(waypoints, "useeffect waypoints");
+    // function oof() {
+    //   var allLayers = L.featureGroup();
+    //   mapRef.eachLayer(function (layer) {
+    //     console.log(typeof layer);
+    //     console.log(layer instanceof L.Polygon);
+    //     // if (layer instanceof L.Path || layer instanceof L.Marker) {
+    //     if (layer instanceof L.Polygon) {
+    //       allLayers.addLayer(layer);
+    //     }
+    //   });
+    //   console.log(allLayers, "allLayers");
+    // }
+
+    // oof();
+
+    let geomanLayers = mapRef.pm.getGeomanLayers();
+    console.log(geomanLayers, "geomanLayers");
+
+    // var layers = L.PM.Utils.findLayers(mapRef);
+    // console.log(layers, " L.PM.Utils.findLayers(mapRef)");
+    // var group = L.featureGroup();
+    // layers.forEach((layer) => {
+    //   group.addLayer(layer);
+    // });
+    // console.log(group, "group");
+
+    // console.log(geomanLayers.length>=2 && geomanLayers?.[1]?.getLatLngs(),"geomanLayers")
   }, [waypoints]);
 
-  useEffect(() => {
-    console.log(reverseCodedWaypoints, "useeffect reverseCodedWaypoints");
-  }, [reverseCodedWaypoints]);
+  // useEffect(() => {
+  //   console.log(reverseCodedWaypoints, "useeffect reverseCodedWaypoints");
+  // }, [reverseCodedWaypoints]);
 
-  useEffect(() => {
-    console.log(hexBoundaryList, "useeffect hexBoundaryList");
-  }, [hexBoundaryList]);
+  // useEffect(() => {
+  //   console.log(hexBoundaryList, "useeffect hexBoundaryList");
+  // }, [hexBoundaryList]);
 
-  useEffect(() => {
-    console.log(hexCenterCoordinatesList, "useeffect hexCenterCoordinatesList");
-  }, [hexCenterCoordinatesList]);
+  // useEffect(() => {
+  //   console.log(hexCenterCoordinatesList, "useeffect hexCenterCoordinatesList");
+  // }, [hexCenterCoordinatesList]);
 
-  useEffect(() => {
-    console.log(h3IndexList, "useeffect h3IndexList");
-  }, [h3IndexList]);
+  // useEffect(() => {
+  //   console.log(h3IndexList, "useeffect h3IndexList");
+  // }, [h3IndexList]);
 
   return (
     <>
