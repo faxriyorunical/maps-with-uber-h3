@@ -108,6 +108,11 @@ const RoutingMachineController = (props: any) => {
   >([]);
 
   /**
+   * polygon2hex visibility
+   */
+  const [showPolygon2Hex, setShowPolygon2Hex] = useState<boolean>(true);
+
+  /**
    * menu visibility handler
    */
   const showMenuHandler = () => {
@@ -287,7 +292,7 @@ const RoutingMachineController = (props: any) => {
 
   const getHexagonsWithinPolygon = (
     polygonBoundaries: L.LatLng[],
-    res = 10
+    res = 9
   ) => {
     let polygon: number[][] | number[][][] =
       latlngObj2latLngList(polygonBoundaries);
@@ -338,6 +343,34 @@ const RoutingMachineController = (props: any) => {
       console.log(layer, "pm:remove -- remove layer");
       setPolygonBoundaryList(() => []);
     });
+  });
+
+  // Fired when Drawing Mode is toggled.
+  mapRef.on("pm:globaldrawmodetoggled", (e) => {
+    console.log(e, "pm:globaldrawmodetoggled");
+    let modeStatus = e?.enabled;
+    setShowPolygon2Hex(!modeStatus);
+  });
+
+  // 	Fired when Edit Mode is toggled.
+  mapRef.on("pm:globaleditmodetoggled", (e) => {
+    console.log(e, "pm:globaleditmodetoggled");
+    let modeStatus = e?.enabled;
+    setShowPolygon2Hex(!modeStatus);
+  });
+
+  // 	Fired when Drag Mode is toggled
+  mapRef.on("pm:globaldragmodetoggled", (e) => {
+    console.log(e, "pm:globaldragmodetoggled");
+    let modeStatus = e?.enabled;
+    setShowPolygon2Hex(!modeStatus);
+  });
+
+  //Fired when Removal Mode is toggled
+  mapRef.on("pm:globalremovalmodetoggled", (e) => {
+    console.log(e, "pm:globalremovalmodetoggled");
+    let modeStatus = e?.enabled;
+    setShowPolygon2Hex(!modeStatus);
   });
 
   useEffect(() => {
@@ -552,7 +585,8 @@ const RoutingMachineController = (props: any) => {
           />
         ))}
 
-      {polygon2HexBoundaryList?.length > 0 &&
+      {showPolygon2Hex &&
+        polygon2HexBoundaryList?.length > 0 &&
         polygon2HexBoundaryList?.map((singileHexCoordinates, idx) => {
           console.log(singileHexCoordinates, "singileHexCoordinates");
           return (
@@ -566,7 +600,7 @@ const RoutingMachineController = (props: any) => {
                   | L.LatLngExpression[][][]
               }
             >
-              <Tooltip permanent={true}>{`Service Area`}</Tooltip>
+              <Tooltip>{`Service Area`}</Tooltip>
             </Polygon>
           );
         })}
