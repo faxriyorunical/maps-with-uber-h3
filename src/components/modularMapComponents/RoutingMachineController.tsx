@@ -260,6 +260,13 @@ const RoutingMachineController = (props: any) => {
     drawCircle: false,
     cutPolygon: false,
     drawText: false,
+
+    //conditionally show toolbar options based on polygonBoundaryList state
+    drawRectangle:polygonBoundaryList.length==0 && true,
+    drawPolygon:polygonBoundaryList.length==0 && true,
+    editMode:polygonBoundaryList.length==1 && true,
+    dragMode:polygonBoundaryList.length==1 && true,
+    removalMode:polygonBoundaryList.length==1 && true,
   });
 
   //Called when a shape is drawn/finished. Payload includes shape type and the drawn layer.
