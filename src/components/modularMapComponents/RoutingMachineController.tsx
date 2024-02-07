@@ -114,9 +114,18 @@ const RoutingMachineController = (props: any) => {
 
   /**
    * service mode options for state
+   *
+   * active - if rect /poly is placed
+   *
+   * not active - if marker is placed with no rect /poly
+   *
+   * not set - if no marker or rect / poly are placed
+   *
+   * confirmed - if rect / poly is placed and markers are placed
    */
   const serviceModeOptions = {
     active: "active",
+    confirmed: "confirmed",
     notActive: "notActive",
     notSet: "notSet",
   };
@@ -280,6 +289,22 @@ const RoutingMachineController = (props: any) => {
     fillOpacity: 0.01,
   });
 
+  /**
+   *
+   * @returns boolean
+   *
+   * check service mode for confirmed and not active
+   *
+   * then boolean value is returned
+   */
+  const displayToolbar = () => {
+    let displayBoolean: boolean =
+      serviceMode !== serviceModeOptions.confirmed &&
+      serviceMode !== serviceModeOptions.notActive;
+
+    return displayBoolean;
+  };
+
   // add Leaflet-Geoman controls with some options to the map
   mapRef.pm.addControls({
     position: "bottomleft",
@@ -293,11 +318,11 @@ const RoutingMachineController = (props: any) => {
     drawText: false,
 
     //conditionally show toolbar options based on polygonBoundaryList state
-    drawRectangle: polygonBoundaryList.length == 0 && true,
-    drawPolygon: polygonBoundaryList.length == 0 && true,
-    editMode: polygonBoundaryList.length == 1 && true,
-    dragMode: polygonBoundaryList.length == 1 && true,
-    removalMode: polygonBoundaryList.length == 1 && true,
+    drawRectangle: displayToolbar() && polygonBoundaryList.length == 0 && true,
+    drawPolygon: displayToolbar() && polygonBoundaryList.length == 0 && true,
+    editMode: displayToolbar() && polygonBoundaryList.length == 1 && true,
+    dragMode: displayToolbar() && polygonBoundaryList.length == 1 && true,
+    removalMode: displayToolbar() && polygonBoundaryList.length == 1 && true,
   });
 
   const latlngObj2latLngList = (polygonBoundaries: L.LatLng[]) => {
@@ -388,6 +413,21 @@ const RoutingMachineController = (props: any) => {
     setShowPolygon2Hex(!modeStatus);
   });
 
+  /**
+   *
+   * @returns boolean
+   *
+   * check if polygon boudary list and waypoints states are empty
+   *
+   * return boolean value
+   */
+  const emptyPolygonWaypointBool = () => {
+    let emptyPolygonWaypointBool =
+      polygonBoundaryList.length === 0 && waypoints.length === 0;
+
+    return emptyPolygonWaypointBool;
+  };
+
   useEffect(() => {
     console.log(waypoints, "useeffect waypoints");
 
@@ -395,9 +435,19 @@ const RoutingMachineController = (props: any) => {
       //setting service mode state
       setServiceMode(serviceModeOptions.notActive);
     }
-    if (polygonBoundaryList.length === 0 && waypoints.length === 0) {
+    if (emptyPolygonWaypointBool()) {
       //setting service mode state
       setServiceMode(serviceModeOptions.notSet);
+    }
+
+    if (polygonBoundaryList.length > 0 && waypoints.length > 0) {
+      //setting service mode state
+      setServiceMode(serviceModeOptions.confirmed);
+    }
+
+    if (polygonBoundaryList.length > 0 && waypoints.length === 0) {
+      //setting service mode state
+      setServiceMode(serviceModeOptions.active);
     }
 
     // function oof() {
@@ -456,7 +506,7 @@ const RoutingMachineController = (props: any) => {
       setServiceMode(serviceModeOptions.active);
     }
 
-    if (polygonBoundaryList.length === 0 && waypoints.length === 0) {
+    if (emptyPolygonWaypointBool()) {
       //setting service mode state
 
       setServiceMode(serviceModeOptions.notSet);
@@ -521,6 +571,14 @@ const RoutingMachineController = (props: any) => {
             <div>
               <div className={`font-bold text-sm md:text-base p-2`}>
                 Service Area Routing Active
+              </div>
+            </div>
+          )}
+
+          {serviceMode === serviceModeOptions.confirmed && (
+            <div>
+              <div className={`font-bold text-sm md:text-base p-2`}>
+                Service Area Routing Active (confirmed)
               </div>
             </div>
           )}
