@@ -94,6 +94,15 @@ const RoutingMachineController = (props: any) => {
   >([]);
 
   /**
+   * polygon boundary gets stored here
+   * list of latlng boundary data
+   *  [[lat,lng]]
+   */
+  const [polygonBoundaryList, setPolygonBoundaryList] = useState<
+    [] | any[] | [L.LatLng[]]
+  >([]);
+
+  /**
    * menu visibility handler
    */
   const showMenuHandler = () => {
@@ -254,13 +263,26 @@ const RoutingMachineController = (props: any) => {
   });
 
   //Called when a shape is drawn/finished. Payload includes shape type and the drawn layer.
+  // re write polygon state triggered by various events
   mapRef.on("pm:create", (e) => {
     let layer = e.layer;
     console.log(layer, "pm:create -- created layer");
+    console.log(Object.keys(layer), "pm:create --keys created layer");
+    //@ts-ignore
+    console.log(layer?._latlngs?.[0], "pm:create --getlatlngs created layer");
+
+    //@ts-ignore
+    let latLngs = layer?._latlngs?.[0];
+
+    setPolygonBoundaryList(() => [latLngs]);
 
     //Fired when Edit Mode is disabled and a layer is edited and its coordinates have changed.
     layer.on("pm:update", function (e) {
       console.log(layer, "pm:update -- updated layer");
+      //@ts-ignore
+      latLngs = layer?._latlngs?.[0];
+
+      setPolygonBoundaryList(() => [latLngs]);
     });
 
     // //Fired when Drag Mode on a layer is disabled.
@@ -271,6 +293,7 @@ const RoutingMachineController = (props: any) => {
     //Fired when Drag Mode on a layer is disabled.
     layer.on("pm:remove", function (e) {
       console.log(layer, "pm:remove -- remove layer");
+      setPolygonBoundaryList(() => []);
     });
   });
 
@@ -320,6 +343,10 @@ const RoutingMachineController = (props: any) => {
   // useEffect(() => {
   //   console.log(h3IndexList, "useeffect h3IndexList");
   // }, [h3IndexList]);
+
+  useEffect(() => {
+    console.log(polygonBoundaryList, "useeffect polygonBoundaryList");
+  }, [polygonBoundaryList]);
 
   return (
     <>
