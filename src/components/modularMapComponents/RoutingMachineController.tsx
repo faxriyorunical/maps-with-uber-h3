@@ -27,6 +27,7 @@ import {
 } from "@/utils/hexUtils";
 import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
+import { booleanPointInPolygonUtil } from "@/utils/booleanPointInPolygonUtil";
 
 // const markerPath = "/marker-icon.png";
 
@@ -279,7 +280,24 @@ const RoutingMachineController = (props: any) => {
       console.log(e.layerPoint);
     },
     dblclick: (e) => {
-      doubleClickEventUtil(e);
+      if (
+        serviceMode === serviceModeOptions.active ||
+        serviceMode === serviceModeOptions.confirmed
+      ) {
+        let latLng = e.latlng;
+        let polygonBoundary = polygonBoundaryList[0];
+        let isInsidePolygon = booleanPointInPolygonUtil(
+          latLng,
+          polygonBoundary
+        );
+        console.log(isInsidePolygon, "isInsidePolygon");
+
+        if (isInsidePolygon) {
+          doubleClickEventUtil(e);
+        }
+      } else {
+        doubleClickEventUtil(e);
+      }
     },
   });
 
