@@ -27,6 +27,7 @@ import {
 } from "@/utils/hexUtils";
 import "@geoman-io/leaflet-geoman-free";
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
+
 // const markerPath = "/marker-icon.png";
 
 /**
@@ -99,6 +100,10 @@ const RoutingMachineController = (props: any) => {
    *  [[lat,lng]]
    */
   const [polygonBoundaryList, setPolygonBoundaryList] = useState<
+    [] | any[] | [L.LatLng[]]
+  >([]);
+
+  const [polygon2HexBoundaryList, setPolygon2HexBoundaryList] = useState<
     [] | any[] | [L.LatLng[]]
   >([]);
 
@@ -249,6 +254,12 @@ const RoutingMachineController = (props: any) => {
     },
   });
 
+  mapRef.pm.setPathOptions({
+    color: "orange",
+    // fillColor: "blue",
+    fillOpacity: 0.01,
+  });
+
   // add Leaflet-Geoman controls with some options to the map
   mapRef.pm.addControls({
     position: "bottomleft",
@@ -262,12 +273,37 @@ const RoutingMachineController = (props: any) => {
     drawText: false,
 
     //conditionally show toolbar options based on polygonBoundaryList state
-    drawRectangle:polygonBoundaryList.length==0 && true,
-    drawPolygon:polygonBoundaryList.length==0 && true,
-    editMode:polygonBoundaryList.length==1 && true,
-    dragMode:polygonBoundaryList.length==1 && true,
-    removalMode:polygonBoundaryList.length==1 && true,
+    drawRectangle: polygonBoundaryList.length == 0 && true,
+    drawPolygon: polygonBoundaryList.length == 0 && true,
+    editMode: polygonBoundaryList.length == 1 && true,
+    dragMode: polygonBoundaryList.length == 1 && true,
+    removalMode: polygonBoundaryList.length == 1 && true,
   });
+
+  const latlngObj2latLngList = (polygonBoundaries: L.LatLng[]) => {
+    let latLngList = polygonBoundaries.map((pair) => [pair?.lat, pair?.lng]);
+    return latLngList;
+  };
+
+  const getHexagonsWithinPolygon = (
+    polygonBoundaries: L.LatLng[],
+    res = 10
+  ) => {
+    let polygon: number[][] | number[][][] =
+      latlngObj2latLngList(polygonBoundaries);
+
+    const hexagons = h3.polygonToCells(polygon, res);
+
+    // Get the outline of a set of hexagons,
+    // do not want geojson - so passing false
+    const coordinates = h3.cellsToMultiPolygon(hexagons, false);
+
+    console.log(polygon, "polygon hex");
+    console.log(hexagons, "hexagons hex");
+    console.log(coordinates, "coordinates hex");
+
+    setPolygon2HexBoundaryList(coordinates);
+  };
 
   //Called when a shape is drawn/finished. Payload includes shape type and the drawn layer.
   // re write polygon state triggered by various events
@@ -339,9 +375,9 @@ const RoutingMachineController = (props: any) => {
   //   console.log(reverseCodedWaypoints, "useeffect reverseCodedWaypoints");
   // }, [reverseCodedWaypoints]);
 
-  // useEffect(() => {
-  //   console.log(hexBoundaryList, "useeffect hexBoundaryList");
-  // }, [hexBoundaryList]);
+  useEffect(() => {
+    console.log(hexBoundaryList, "useeffect hexBoundaryList");
+  }, [hexBoundaryList]);
 
   // useEffect(() => {
   //   console.log(hexCenterCoordinatesList, "useeffect hexCenterCoordinatesList");
@@ -353,7 +389,15 @@ const RoutingMachineController = (props: any) => {
 
   useEffect(() => {
     console.log(polygonBoundaryList, "useeffect polygonBoundaryList");
+
+    if (polygonBoundaryList.length > 0) {
+      getHexagonsWithinPolygon(polygonBoundaryList[0]);
+    }
   }, [polygonBoundaryList]);
+
+  useEffect(() => {
+    console.log(polygon2HexBoundaryList, "useeffect polygon2HexBoundaryList");
+  }, [polygon2HexBoundaryList]);
 
   return (
     <>
@@ -507,6 +551,25 @@ const RoutingMachineController = (props: any) => {
             }
           />
         ))}
+
+      {polygon2HexBoundaryList?.length > 0 &&
+        polygon2HexBoundaryList?.map((singileHexCoordinates, idx) => {
+          console.log(singileHexCoordinates, "singileHexCoordinates");
+          return (
+            <Polygon
+              key={`polygon2Hex-${idx}`}
+              pathOptions={{ color: "black" }}
+              positions={
+                singileHexCoordinates as
+                  | L.LatLngExpression[]
+                  | L.LatLngExpression[][]
+                  | L.LatLngExpression[][][]
+              }
+            >
+              <Tooltip permanent={true}>{`Service Area`}</Tooltip>
+            </Polygon>
+          );
+        })}
     </>
   );
 };
