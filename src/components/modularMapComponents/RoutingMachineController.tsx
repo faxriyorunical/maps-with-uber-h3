@@ -154,19 +154,6 @@ const RoutingMachineController = (props: any) => {
    */
   const routingUtil = () => {
     routeControl2 = routingUtilExported(waypoints, mapRef);
-
-    console.log(routeControl2.getWaypoints(), "getWaypoints");
-    console.log(routeControl2.getContainer(), "getPlgetContaineran");
-    console.log(routeControl2.getRouter(), "getRouter");
-    console.log(routeControl2.getPlan(), "getPgetPlanlan");
-    console.log(routeControl2.getPosition(), "getPosition");
-    console.log(routeControl2, "routeControl2");
-    console.log(Object.keys(routeControl2), "routeControl2");
-    // console.log(routeControl2._container,"_container")
-    // console.log(routeControl2._plan,"_plan")
-    // console.log(routeControl2._itineraryBuilder,"_itineraryBuilder")
-    console.log(routeControl2.route, "instructions");
-    console.log(mapRef, "mapRef");
   };
 
   /**
@@ -468,33 +455,8 @@ const RoutingMachineController = (props: any) => {
       setServiceMode(serviceModeOptions.active);
     }
 
-    // function oof() {
-    //   var allLayers = L.featureGroup();
-    //   mapRef.eachLayer(function (layer) {
-    //     console.log(typeof layer);
-    //     console.log(layer instanceof L.Polygon);
-    //     // if (layer instanceof L.Path || layer instanceof L.Marker) {
-    //     if (layer instanceof L.Polygon) {
-    //       allLayers.addLayer(layer);
-    //     }
-    //   });
-    //   console.log(allLayers, "allLayers");
-    // }
-
-    // oof();
-
     let geomanLayers = mapRef.pm.getGeomanLayers();
     console.log(geomanLayers, "geomanLayers");
-
-    // var layers = L.PM.Utils.findLayers(mapRef);
-    // console.log(layers, " L.PM.Utils.findLayers(mapRef)");
-    // var group = L.featureGroup();
-    // layers.forEach((layer) => {
-    //   group.addLayer(layer);
-    // });
-    // console.log(group, "group");
-
-    // console.log(geomanLayers.length>=2 && geomanLayers?.[1]?.getLatLngs(),"geomanLayers")
   }, [waypoints]);
 
   // useEffect(() => {
