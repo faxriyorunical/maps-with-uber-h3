@@ -418,6 +418,16 @@ const RoutingMachineController = (props: any) => {
     setShowPolygon2Hex(!modeStatus);
   });
 
+  //Fired when a layer is removed via Removal Mode
+  mapRef.on("pm:remove", (e) => {
+    console.log(e, "pm:remove");
+    // disable removal mode
+    mapRef.pm.disableGlobalRemovalMode();
+
+    //empty out polygon 2 hex state
+    setPolygon2HexBoundaryList([]);
+  });
+
   /**
    *
    * @returns boolean
