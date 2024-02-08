@@ -114,6 +114,11 @@ const RoutingMachineController = (props: any) => {
   const [showPolygon2Hex, setShowPolygon2Hex] = useState<boolean>(true);
 
   /**
+   * polygon2hex visibility
+   */
+  const [drawEditModeActive, setDrawEditModeActive] = useState<boolean>(false);
+
+  /**
    * service mode options for state
    *
    * active - if rect /poly is placed
@@ -267,6 +272,10 @@ const RoutingMachineController = (props: any) => {
       console.log(e.layerPoint);
     },
     dblclick: (e) => {
+      if (drawEditModeActive) {
+        return;
+      }
+
       if (
         serviceMode === serviceModeOptions.active ||
         serviceMode === serviceModeOptions.confirmed
@@ -335,24 +344,25 @@ const RoutingMachineController = (props: any) => {
     return latLngList;
   };
 
-  const getHexagonsWithinPolygon = (
-    polygonBoundaries: L.LatLng[],
-    res = 9
-  ) => {
+  const getHexagonsWithinPolygon = (polygonBoundaries: L.LatLng[], res = 9) => {
     let polygon: number[][] | number[][][] =
       latlngObj2latLngList(polygonBoundaries);
 
-    const hexagons = h3.polygonToCells(polygon, res);
+    try {
+      const hexagons = h3.polygonToCells(polygon, res);
 
-    // Get the outline of a set of hexagons,
-    // do not want geojson - so passing false
-    const coordinates = h3.cellsToMultiPolygon(hexagons, false);
+      // Get the outline of a set of hexagons,
+      // do not want geojson - so passing false
+      const coordinates = h3.cellsToMultiPolygon(hexagons, false);
 
-    console.log(polygon, "polygon hex");
-    console.log(hexagons, "hexagons hex");
-    console.log(coordinates, "coordinates hex");
+      console.log(polygon, "polygon hex");
+      console.log(hexagons, "hexagons hex");
+      console.log(coordinates, "coordinates hex");
 
-    setPolygon2HexBoundaryList(coordinates);
+      setPolygon2HexBoundaryList(coordinates);
+    } catch (error) {
+      console.log(error, "oof");
+    }
   };
 
   //Called when a shape is drawn/finished. Payload includes shape type and the drawn layer.
@@ -395,6 +405,9 @@ const RoutingMachineController = (props: any) => {
     console.log(e, "pm:globaldrawmodetoggled");
     let modeStatus = e?.enabled;
     setShowPolygon2Hex(!modeStatus);
+
+    //tool bar mode active state
+    setDrawEditModeActive(modeStatus);
   });
 
   // 	Fired when Edit Mode is toggled.
@@ -402,6 +415,8 @@ const RoutingMachineController = (props: any) => {
     console.log(e, "pm:globaleditmodetoggled");
     let modeStatus = e?.enabled;
     setShowPolygon2Hex(!modeStatus);
+    //tool bar mode active state
+    setDrawEditModeActive(modeStatus);
   });
 
   // 	Fired when Drag Mode is toggled
@@ -409,6 +424,8 @@ const RoutingMachineController = (props: any) => {
     console.log(e, "pm:globaldragmodetoggled");
     let modeStatus = e?.enabled;
     setShowPolygon2Hex(!modeStatus);
+    //tool bar mode active state
+    setDrawEditModeActive(modeStatus);
   });
 
   //Fired when Removal Mode is toggled
