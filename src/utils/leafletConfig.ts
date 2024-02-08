@@ -2,9 +2,9 @@
  * leaflet configs
  */
 export const leafletConfig = {
-  zoom: 6,
-  minZoom: 3,
-  maxZoom: 17,
+  zoom: 14,
+  minZoom: 10,
+  maxZoom: 18,
   center: [1.36, 103.83],
   zoomControl: false,
   scrollWheelZoom: true,

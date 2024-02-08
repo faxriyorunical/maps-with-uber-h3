@@ -337,7 +337,7 @@ const RoutingMachineController = (props: any) => {
 
   const getHexagonsWithinPolygon = (
     polygonBoundaries: L.LatLng[],
-    res = 10
+    res = 9
   ) => {
     let polygon: number[][] | number[][][] =
       latlngObj2latLngList(polygonBoundaries);
