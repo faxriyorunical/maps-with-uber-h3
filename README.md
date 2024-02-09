@@ -119,3 +119,6 @@ npm run docs
 - Readme & dedicated docs
 - File versioning - using git/ github
 - Google Cloud Platform (GCP) deployment: Storage Bucket with Load balancer
+  
+[dedicated docs.webm](https://github.com/808vita/maps-with-uber-h3/assets/97225946/c7f4c0c3-7643-40e4-860c-a76afbc4064a)
+
