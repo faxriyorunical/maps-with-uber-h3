@@ -1,8 +1,8 @@
 # Leaflet Maps - Leaflet Routing Machine - UberH3 - Service Area Mode :
 
-### Deployed link : [`Live Site`](http://34.111.125.141:80)
+### Deployed link : [`Live Site`](https://phenomenal-haupia-559541.netlify.app/)
 
-### Deployed docs path: [`Deployed Docs`](http://34.111.125.141/docs/index.html)
+### Deployed docs path: [`Deployed Docs`](https://phenomenal-haupia-559541.netlify.app/docs/index.html)
 
 You can also access docs on local server by navigating to "/docs/index.html"
 
